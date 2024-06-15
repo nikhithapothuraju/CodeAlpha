@@ -1,0 +1,161 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+// Main Class
+public class TravelItineraryPlanner {
+
+    private static List<Destination> destinations = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to the Travel Itinerary Planner!");
+        
+        while (true) {
+            System.out.println("1. Add Destination");
+            System.out.println("2. View Itinerary");
+            System.out.println("3. Calculate Budget");
+            System.out.println("4. Get Weather Information");
+            System.out.println("5. Show Map");
+            System.out.println("6. Exit");
+            
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            
+            switch (choice) {
+                case 1:
+                    addDestination();
+                    break;
+                case 2:
+                    viewItinerary();
+                    break;
+                case 3:
+                    calculateBudget();
+                    break;
+                case 4:
+                    getWeatherInformation();
+                    break;
+                case 5:
+                    showMap();
+                    break;
+                case 6:
+                    System.out.println("Thank you for using the Travel Itinerary Planner!");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static void addDestination() {
+        System.out.print("Enter destination name: ");
+        String name = scanner.nextLine();
+        
+        System.out.print("Enter start date (yyyy-mm-dd): ");
+        String startDate = scanner.nextLine();
+        
+        System.out.print("Enter end date (yyyy-mm-dd): ");
+        String endDate = scanner.nextLine();
+        
+        System.out.print("Enter preferences: ");
+        String preferences = scanner.nextLine();
+        
+        destinations.add(new Destination(name, LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), preferences));
+        System.out.println("Destination added!");
+    }
+
+    private static void viewItinerary() {
+        System.out.println("Your Travel Itinerary:");
+        for (Destination destination : destinations) {
+            System.out.println(destination);
+        }
+    }
+
+    private static void calculateBudget() {
+        double totalBudget = BudgetCalculator.calculate(destinations);
+        System.out.println("Estimated total budget: $" + totalBudget);
+    }
+
+    private static void getWeatherInformation() {
+        for (Destination destination : destinations) {
+            String weatherInfo = WeatherService.getWeather(destination.getName());
+            System.out.println("Weather for " + destination.getName() + ": " + weatherInfo);
+        }
+    }
+
+    private static void showMap() {
+        for (Destination destination : destinations) {
+            String map = MapService.getMap(destination.getName());
+            System.out.println("Map for " + destination.getName() + ": " + map);
+        }
+    }
+}
+
+// Destination Class
+class Destination {
+    private String name;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String preferences;
+
+    public Destination(String name, LocalDate startDate, LocalDate endDate, String preferences) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.preferences = preferences;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public String getPreferences() {
+        return preferences;
+    }
+
+    @Override
+    public String toString() {
+        return "Destination{" +
+                "name='" + name + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", preferences='" + preferences + '\'' +
+                '}';
+    }
+}
+
+// Weather Service (Mock)
+class WeatherService {
+    public static String getWeather(String location) {
+        // Mock weather information
+        return "Sunny, 25°C";
+    }
+}
+
+// Budget Calculator
+class BudgetCalculator {
+    public static double calculate(List<Destination> destinations) {
+        // Mock budget calculation
+        return destinations.size() * 500; // Assume $500 per destination
+    }
+}
+
+// Map Service (Mock)
+class MapService {
+    public static String getMap(String location) {
+        // Mock map information
+        return "Map of " + location;
+    }
+}
+
